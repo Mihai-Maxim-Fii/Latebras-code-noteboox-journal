@@ -1,0 +1,18 @@
+.images_before{
+    width: 100%;
+    top:-100px;
+    color: white;
+    padding: 1rem;
+    z-index: -1;
+    background-color: #363333;
+    opacity: 0;
+    transition:  opacity 0.5s;
+
+}
+
+.images_after{
+
+    z-index: 0;
+    opacity: 100%;
+    top:0px;
+}

@@ -1,0 +1,155 @@
+import {useEffect, useState, useReducer} from "react";
+
+const Carousel = (props) => {
+
+
+    const elementsReducer = (state, action) => {
+        if (action.type === "UPDATE_ELEMENTS") {
+
+            return {
+                currentIndex: state.currentIndex,
+                selectedElements: [...action.payload]
+            };
+        } else if (action.type === "INCREMENT_INDEX") {
+            return {
+                currentIndex: state.currentIndex + action.payload,
+                selectedElements: state.selectedElements
+            };
+        } else if (action.type === "UPDATE_ELEMENTS_AND_SHIFT") {
+            if (state.currentIndex === action.payload.length) {
+                return {
+                    currentIndex: action.payload.length - 1,
+                    selectedElements: [...action.payload]
+                };
+            }
+            return {
+                currentIndex: state.currentIndex,
+                selectedElements: [...action.payload]
+            };
+        } else {
+            return state;
+        }
+    };
+
+    const [elementsState, dispatchElements] = useReducer(elementsReducer, {
+        currentIndex: 0,
+        selectedElements: []
+    });
+
+    const goNext = () => {
+        if (elementsState.currentIndex + 1 < elementsState.selectedElements.length) {
+            dispatchElements({type: "INCREMENT_INDEX", payload: 1});
+        } else {
+            let index = props.items.indexOf(elementsState.selectedElements[elementsState.currentIndex]);
+            let my_selected_elements = [...elementsState.selectedElements];
+            if (index + 1 < props.items.length) {
+                my_selected_elements.shift();
+                my_selected_elements.push(props.items[index + 1]);
+            } else {
+                my_selected_elements.shift();
+                my_selected_elements.push(props.items[0]);
+            }
+            dispatchElements({type: "UPDATE_ELEMENTS", payload: my_selected_elements});
+        }
+    };
+
+    const goBack = () => {
+        if (elementsState.currentIndex + -1 >= 0) {
+            dispatchElements({type: "INCREMENT_INDEX", payload: -1});
+        } else {
+            let index = props.items.indexOf(elementsState.selectedElements[elementsState.currentIndex]);
+            let my_selected_elements = [...elementsState.selectedElements];
+            if (index - 1 >= 0) {
+                my_selected_elements.pop();
+                my_selected_elements.unshift(props.items[index - 1]);
+            } else {
+                my_selected_elements.pop();
+                my_selected_elements.unshift(props.items[props.items.length - 1]);
+            }
+            dispatchElements({type: "UPDATE_ELEMENTS", payload: my_selected_elements});
+        }
+    };
+    useEffect(() => {
+        let items = [];
+        let ind = 0;
+        for (let i = 0; i < Math.min(Math.floor(window.innerWidth / 50), props.items.length); i++) {
+            items.push(props.items[ind]);
+            if (ind + 1 < props.items.length) {
+                ind += 1;
+            } else {
+                ind = props.items.length - 1;
+            }
+        }
+        dispatchElements({type: "UPDATE_ELEMENTS", payload: items});
+    }, [props.items]);
+
+    const handle_resize = () => {  
+
+        let items = elementsState.selectedElements
+        if(elementsState.selectedElements.length!==0){
+        if ((elementsState.selectedElements.length < Math.floor(window.innerWidth / 50)) && elementsState.selectedElements.length < props.items.length) {
+            let new_index = props.items.indexOf(elementsState.selectedElements[elementsState.selectedElements.length - 1])
+            if (new_index + 1 < props.items.length) {
+                items.push(props.items[new_index + 1])
+            } else {
+                items.push(props.items[0])
+            }
+        } else if (elementsState.selectedElements.length > Math.floor(window.innerWidth / 50)) {
+            items.pop()
+        }
+        dispatchElements({type: "UPDATE_ELEMENTS_AND_SHIFT", payload: items});
+    }
+    
+
+
+        
+        
+    };
+
+
+    const [width, setWidth] = useState(window.innerWidth)
+
+    useEffect(() => {
+        window.addEventListener("resize", () => {
+            setWidth(window.innerWidth)
+        });
+    }, [])
+
+    useEffect(() => {
+        handle_resize()
+    }, [width])
+
+    return (
+        <div>
+            <div style={
+                {display: "flex"}
+            }>
+                {
+                elementsState.selectedElements.map((item, index) => {
+                    return (
+                        <div key={index}
+                            style={
+                                {
+                                    backgroundColor: elementsState.currentIndex === index ? "yellow" : "",
+                                    width: "50px",
+                                    height: "50px",
+                                    border: "1px solid black",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }
+                        }>
+                            {item} </div>
+                    );
+                })
+            } </div>
+            <div style={
+                {display: "flex"}
+            }>
+                <button onClick={goBack}>Back</button>
+                <button onClick={goNext}>Next</button>
+            </div>
+        </div>
+    );
+};
+export default Carousel;
