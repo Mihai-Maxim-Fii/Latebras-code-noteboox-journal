@@ -2,7 +2,8 @@ import CloseCircle from "../../svgs/CloseCircle"
 interface ImageProps{
     imageObject:any,
     imageName:string,
-    removeImage:any
+    removeImage:any,
+    isGreen?:boolean
 }
 
 
@@ -12,10 +13,10 @@ const NewImage:React.FC<ImageProps> = (props) =>{
     }
     return (
         <div className="flex gap-1 items-center">
-            <div className="">
+            <div className={`${props.isGreen!==undefined?" text-green-500":""}`}>
                 <CloseCircle className=" hover:text-red-500 hover:cursor-pointer" width={20} height={20} onClick={remove}></CloseCircle>
             </div>
-            <div>
+            <div className={`${props.isGreen!==undefined?" text-green-500":""}`}>
                 {props.imageName}
             </div>
             

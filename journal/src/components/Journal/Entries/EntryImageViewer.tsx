@@ -12,6 +12,7 @@ const EntryImageViewer:React.FC<ImageData> = (props) =>{
 
     const [currentIndex,setCurrentIndex]= useState(props.images[0].image_data)
     const create_image_array=()=>{
+        console.log(props.images)
         let images:any=[]
         props.images.forEach((img_object:any)=>{
             images.push(img_object.image_data)
