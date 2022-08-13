@@ -15,10 +15,13 @@ const user_gets = require("./routes/user-api/gets")
 const private_entries_posts = require("./routes/private-entries-api/posts")
 const private_entries_gets = require("./routes/private-entries-api/gets")
 const private_entries_puts = require("./routes/private-entries-api/puts")
+const private_entries_patches = require("./routes/private-entries-api/patches");
+const priate_entries_deletes = require("./routes/private-entries-api/deletes")
 const app = express()
 
 const mongo = require("mongoose")
-const req = require("express/lib/request")
+const req = require("express/lib/request");
+
 
 let user_refresh_tokens = []
 
@@ -55,6 +58,8 @@ app.use("/user-api", user_gets)
 app.use("/private-entries-api", private_entries_posts)
 app.use("/private-entries-api", private_entries_gets)
 app.use("/private-entries-api", private_entries_puts)
+app.use("/private-entries-api", private_entries_patches)
+app.use("/private-entries-api", priate_entries_deletes)
 
 
 mongo.connect(process.env.DB_STRING).then(() => {

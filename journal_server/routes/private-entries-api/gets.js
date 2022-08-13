@@ -74,7 +74,7 @@ private_entries_gets.get("/allposts",async (req,res)=>{
         });
 
         posts_to_send.reverse()
-        console.log(posts_to_send)
+
 
 
         res.send({

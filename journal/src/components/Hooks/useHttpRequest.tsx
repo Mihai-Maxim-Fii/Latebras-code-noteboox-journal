@@ -52,7 +52,6 @@ function useHttp():RequestHttpHook{
         if (request.method==="POST"){
         const response=await axios.post(request.url, request.body,{ withCredentials: true })
         const data = response.data
-
         handle_data(data,resolve)
         }
         else if (request.method==="GET"){
@@ -62,6 +61,16 @@ function useHttp():RequestHttpHook{
         }
         else if (request.method==="PUT"){
         const response=await axios.put(request.url,{ withCredentials: true })
+        const data = response.data
+        handle_data(data,resolve)
+        }
+        else if(request.method==="PATCH"){
+        const response=await axios.patch(request.url,request.body,{ withCredentials: true })
+        const data = response.data
+        handle_data(data,resolve)
+        }
+        else if(request.method==="DELETE"){
+        const response=await axios.delete(request.url,{ withCredentials: true })
         const data = response.data
         handle_data(data,resolve)
         }

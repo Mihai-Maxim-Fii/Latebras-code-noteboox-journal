@@ -115,11 +115,6 @@ const NewEntry:React.FC<EntryProps> = (props) =>{
         setShowContent(true)
     }
     const submitPost = async() =>{
-
-
-       
-
-
         //get key
 
         const key = localStorage.getItem("enc") as string

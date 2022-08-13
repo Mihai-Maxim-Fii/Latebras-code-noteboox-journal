@@ -26,6 +26,7 @@ const Entries:React.FC = () =>{
     const {isLoading:postsLoading, isError:postsLoadingError, send_request:get_all_posts } = useHttp()
     const [emptyFolder, setEmptyFolder] = useState(false)
     const imageInputRef = useRef<HTMLInputElement>(null)
+    const current_post_ref = useRef<any>(null)
 
    useEffect( ()=>{
     if(lastPath.reduce((total,e)=>total+e,"")!==currentPath.reduce((total:any,e:any)=>total+e,"")){
@@ -47,6 +48,9 @@ const Entries:React.FC = () =>{
         imageInputRef.current?.click()
     }
 }
+
+   
+   const [updated_post, set_updated_post] = useState<String>("")
 
 
 
@@ -247,6 +251,11 @@ const Entries:React.FC = () =>{
    const [selected_post_backup, set_selected_post_backup]=useState<any>(null)
 
    const expand_post = (key:String) =>{
+       if(key!==selected_post && key!=="" && selected_post!==""){
+          console.log(selected_post, key)
+          alert("finish editing the previous post")
+       }
+       else
        set_selected_post(key)
        
      
@@ -277,7 +286,7 @@ const Entries:React.FC = () =>{
 
                return <div ><motion.div
                
-               ref={draggable_element_ref}
+               ref={post.key===selected_post?current_post_ref:null}
              
                key={index}
                className="shadow-md shadow-black "
@@ -295,13 +304,21 @@ const Entries:React.FC = () =>{
     
                     maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
                }:{
-                zIndex:zState.indexOf(post),
+               /* zIndex:zState.indexOf(post),
                 resize:"both",
                 overflow: "auto",
                 minWidth:"90vw",
                 minHeight:"320px",
                 maxHeight:"100vh",
-                width:"90vw",
+                width:"90vw",*/
+                zIndex:zState.indexOf(post),
+                    resize:"both",
+                    overflow: "auto",
+                    height:"fit-content",
+                    minWidth:"320px",
+                    maxHeight:"100vh",
+    
+                    maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
 
                }} onMouseOver={()=>{
                 setZstate((old:any)=>{
@@ -310,18 +327,20 @@ const Entries:React.FC = () =>{
                     return old_data
                 })
              }} >
-                <Entry handle_close={handle_close} refresh={refresh_posts}  expand_post={expand_post} currently_expanded_post={selected_post} font_size={post.font_size} language={post.language} title={post.title} date={post.date} key={post.key} images={post.images} new_images={new_image_objects} content={post.content} post_key={post.key} change_drag={setEnableDrag} >
+                <Entry handle_close={handle_close} refresh={refresh_posts}  delete_images= {images_to_delete}  reset_submit = {()=>set_updated_post("")}
+                  expand_post={expand_post} update_post={updated_post} currently_expanded_post={selected_post} font_size={post.font_size} language={post.language} title={post.title} date={post.date} key={post.key} images={post.images} new_images={new_image_objects} content={post.content} post_key={post.key} change_drag={setEnableDrag} >
                    
                </Entry>
               
                </motion.div>
                {(post.key===selected_post)&&
                     <div 
-                    className={ `  flex gap-6 flex-wrap bg-pgray text-white p-2 shadow-sm shadow-black   break-all`}
+                    className={ `  flex gap-6 flex-wrap bg-porange text-white p-2 shadow-sm shadow-black   break-all`}
                     
                     style={{
-                        minWidth:"90vw",
-                        maxWidth:"90vw"
+                        minWidth:"320px",
+                        maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
+                       
                     }}>
                {post.images.map((image:any,index:any)=>{
                    if(images_to_delete.indexOf(image)===-1)
@@ -333,7 +352,6 @@ const Entries:React.FC = () =>{
 
               {newSelectedImages!==undefined&&newSelectedImages.map((image:any,index:any)=>{
                    return <NewImage isGreen={true} imageName={image.name} key={index} imageObject={image}  removeImage={()=>{
-                       console.log("remove new image") 
                        setSelectedImages((old:any)=>old.filter((img:any)=>img!==image))
                 }}/>
 
@@ -350,10 +368,12 @@ const Entries:React.FC = () =>{
                 
                 }
                 {post.key===selected_post&&
-                <div className=" bg-ppink p-1 text-black flex justify-center shadow-sm shadow-black hover:bg-porange hover:text-white cursor-pointer ">
-                    <p>
+                <div className=" bg-ppink p-1 text-black flex justify-center shadow-sm shadow-black hover:bg-porange hover:text-white cursor-pointer "  onClick={() => {
+                    set_updated_post(selected_post)
+                }}>
+                    <button>
                         Save Changes
-                    </p>
+                    </button>
                 </div>}
                </div>
            })
