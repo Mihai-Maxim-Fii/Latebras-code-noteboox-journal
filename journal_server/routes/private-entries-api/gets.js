@@ -13,6 +13,8 @@ private_entries_gets.get("/user-tree", async (req, res)=>{
         ({username,password}=getTokenData(req))
         
         tree = await UserPostTreeModel.findOne({username})
+
+        console.log("sending tree",tree)
         if(tree!==null)
         res.send({
             status:"ok",

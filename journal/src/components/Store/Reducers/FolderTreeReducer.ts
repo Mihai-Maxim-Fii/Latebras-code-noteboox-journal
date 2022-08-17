@@ -11,6 +11,8 @@ interface TreeState{
 
 const FolderTreeReducer = (state:TreeState[]=[], action: any)=>{
     if(action.type==="UPDATE_TREE"){
+
+      console.log(action.tree)
        
        return action.tree
     }

@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken")
-let user_refresh_tokens = require("../models/refresh_tokens")
+let refresh_tkns = require("../models/refresh_tokens")
 const {UserModel, PublicUserModel} = require("../models/user-schemas")
 
 const verify_user =async (req, res, next) => {
+
+    console.log("New request: ", req.url)
     var user_data=""
     if (req.cookies["access_token"] !== undefined && req.cookies["refresh_token"]) {
         
@@ -15,7 +17,7 @@ const verify_user =async (req, res, next) => {
                }
                catch(err){
                    
-                if (user_refresh_tokens.includes(String(req.cookies["refresh_token"]))) {
+                if (refresh_tkns.get_refresh_tokens().includes(String(req.cookies["refresh_token"]))) {
 
                     try{
 
@@ -38,6 +40,10 @@ const verify_user =async (req, res, next) => {
                     catch(err){
                         req.logged = false
                         req.log_msg = "invalid refresh and access token"
+                       
+                        refresh_tkns.remove_refresh_token(req.cookies["refresh_token"])
+                        res.cookie("access_token","",{httpOnly:true, maxAge: 3600000})
+                        res.cookie("refresh_token","",{httpOnly:true, maxAge: 3600000})
                         
                     }
                    
@@ -45,12 +51,18 @@ const verify_user =async (req, res, next) => {
                  } else {
                      req.logged = false
                      req.log_msg = "invalid refresh token"
+                     refresh_tkns.remove_refresh_token(req.cookies["refresh_token"])
+                     res.cookie("access_token","",{httpOnly:true, maxAge: 3600000})
+                     res.cookie("refresh_token","",{httpOnly:true, maxAge: 3600000})
                  }
                }
                
     } else {
         req.logged = false
         req.log_msg = "acces token or refresh token is missing"
+        refresh_tkns.remove_refresh_token(req.cookies["refresh_token"])
+        res.cookie("access_token","",{httpOnly:true, maxAge: 3600000})
+        res.cookie("refresh_token","",{httpOnly:true, maxAge: 3600000})
     }
     
     next()

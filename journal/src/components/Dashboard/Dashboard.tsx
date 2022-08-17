@@ -46,6 +46,7 @@ const Dashboard:React.FC = () =>{
     },[currentPath])
 
     function isOverflown(element:any) {
+        if(element===null) return true
         return  element.scrollWidth > element.clientWidth
       }
 
@@ -116,6 +117,8 @@ const Dashboard:React.FC = () =>{
      <div className={`w-full   p-2 text-ppink h-full rounded-md flex items-center justify-center overflow-auto ${!showCurrentPath?" -z-50":""}`}  ref={current_path_ref}>
      {
      currentPath.map((p:any)=>{
+        
+
          return p.split("#")[1]+"/"
      })
      

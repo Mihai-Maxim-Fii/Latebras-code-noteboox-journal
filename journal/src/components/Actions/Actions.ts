@@ -4,14 +4,15 @@ import utf8 from "crypto-js/enc-utf8"
 import { SHA256 } from "crypto-js"
 
 const enc_function =async (element:any) =>{
-    element=await AES.encrypt("_padding_"+element+"_padding_",key).toString()
+    element=await AES.encrypt(JSON.stringify("_padding_"+element+"_padding_"),key).toString()
     return element
 }
 
 const dec_function = async(element:any)=>{
     if(element==="L0#root") return element
     element=await AES.decrypt(element, key).toString(utf8)
-    element=element.replace("_padding_","").replace("_padding_","")
+    console.log(element)
+    element=element.replace(`"_padding_`,"").replace(`_padding_"`,"")
     return element
 }
 
@@ -49,8 +50,9 @@ const parse_nodes = async (tree:any,e_fnc:any) =>{
 const update_post_tree = (newState:any) =>{
 
     return async(dispatch:any, getState:any)=>{
-        let parsed_nodes =await parse_nodes(newState,enc_function)
-        let normal_nodes = await parse_nodes(newState,(node:any)=>node)
+        let parsed_nodes = await parse_nodes(newState, enc_function)
+        let normal_nodes = await parse_nodes(newState, (node:any)=>node)
+        console.log(parsed_nodes)
         let resp = await axios.put("http://localhost:3001/private-entries-api/update-tree",{tree:parsed_nodes},{ withCredentials: true })
         if(resp.data.status==="ok"){
             dispatch({
@@ -64,7 +66,6 @@ const update_post_tree = (newState:any) =>{
 const key = localStorage.getItem("enc") as string
 
 const update_current_path = (selectedNodes:any)=>{
-   
    
     return async (dispatch:any, getState:any)=>{
         console.log(key)
@@ -92,7 +93,9 @@ const update_current_path = (selectedNodes:any)=>{
 const fetch_post_tree = ()=>{
     return async(dispatch:any, getState:any)=>{
         let resp = await axios.get("http://localhost:3001/private-entries-api/user-tree",{withCredentials:true})
+        console.log(resp.data.tree.nodes)
         let dec =  await parse_nodes(resp.data.tree.nodes,dec_function)
+        console.log(resp.data)
         if(resp.data.status==="ok"){
             dispatch({
                 type:"UPDATE_TREE",

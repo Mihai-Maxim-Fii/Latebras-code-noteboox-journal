@@ -158,7 +158,7 @@ const Entries:React.FC = () =>{
    const handleResize = () =>{
     setScreenWidth(window.innerWidth)
        
-    if(posts.length*320>window.innerWidth){
+    if(posts.length*375>window.innerWidth){
         setGridMode(true)
         }
         else{
@@ -264,7 +264,7 @@ const Entries:React.FC = () =>{
    const [selectedNote,setSelectedNode]=useState("")
 
     return (
-    <div className=" h-fit mb-10">
+    <div className=" h-fit mb-10 ">
     {postsLoading&&
     <div className="absolute w-full z-40 text-white flex justify-center bg-blue-400 h-8">
         Loading posts...
@@ -284,7 +284,13 @@ const Entries:React.FC = () =>{
        {
            posts.map((post:any,index:number)=>{
 
-               return <div ><motion.div
+               return <div style={{
+                minWidth:"375px",
+                height:"fit-content",
+
+                resize:"both",
+
+               }} className="transition-all ease-in-out duration-500 cursor-pointer shadow-black hover:shadow-md" ><motion.div
                
                ref={post.key===selected_post?current_post_ref:null}
              
@@ -295,12 +301,10 @@ const Entries:React.FC = () =>{
                //dragConstraints={screen_ref}
                //dragMomentum={false}
                style={post.key!==selected_post?{
-                    zIndex:zState.indexOf(post),
-                    resize:"both",
-                    overflow: "auto",
+                   // zIndex:zState.indexOf(post),
+                   // overflow: "auto",
                     height:"fit-content",
-                    minWidth:"320px",
-                    maxHeight:"100vh",
+                   // maxWidth:"30vw",
     
                     maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
                }:{
@@ -311,14 +315,12 @@ const Entries:React.FC = () =>{
                 minHeight:"320px",
                 maxHeight:"100vh",
                 width:"90vw",*/
-                zIndex:zState.indexOf(post),
-                    resize:"both",
-                    overflow: "auto",
-                    height:"fit-content",
-                    minWidth:"320px",
-                    maxHeight:"100vh",
-    
-                    maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
+                //zIndex:zState.indexOf(post),
+                 //resize:"both",
+               // overflow: "auto",
+                maxWidth:"100vw",
+                minHeight:"150px",
+                //maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
 
                }} onMouseOver={()=>{
                 setZstate((old:any)=>{
@@ -335,11 +337,10 @@ const Entries:React.FC = () =>{
                </motion.div>
                {(post.key===selected_post)&&
                     <div 
-                    className={ `  flex gap-6 flex-wrap bg-porange text-white p-2 shadow-sm shadow-black   break-all`}
+                    className={ `  flex gap-6 flex-wrap bg-porange text-white p-2 shadow-sm shadow-black   break-all `}
                     
                     style={{
-                        minWidth:"320px",
-                        maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
+                        //maxWidth:screenWidth>=1024?screenWidth/2.25:"90vw",
                        
                     }}>
                {post.images.map((image:any,index:any)=>{
@@ -363,6 +364,7 @@ const Entries:React.FC = () =>{
                 <AddCircle height={30} width={30}  onClick={addImage}>
                        
                 </AddCircle>
+                
                 }
                 </div>
                 

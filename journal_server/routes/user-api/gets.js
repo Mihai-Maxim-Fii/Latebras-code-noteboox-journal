@@ -1,6 +1,6 @@
 const express = require("express")
 const user_gets = express.Router()
-let user_refresh_tokens = require("../../models/refresh_tokens")
+let refresh_tkns = require("../../models/refresh_tokens")
 
 user_gets.get("/logstatus",(req,res)=>{
     if (req.logged){
@@ -21,7 +21,7 @@ user_gets.get("/logstatus",(req,res)=>{
 
 user_gets.get("/logout",(req,res)=>{
     if (req.logged){
-        user_refresh_tokens=user_refresh_tokens.filter(token=>token!==req.cookies["refresh_token"])
+        refresh_tkns.remove_refresh_token(req.cookies["refresh_token"])
         res.cookie("access_token","",{httpOnly:true, maxAge: 3600000})
         res.cookie("refresh_token","",{httpOnly:true, maxAge: 3600000})
         res.send({

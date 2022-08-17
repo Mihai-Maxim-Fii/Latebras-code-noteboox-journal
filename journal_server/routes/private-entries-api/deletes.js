@@ -16,4 +16,32 @@ private_entries_deletes.delete("/delete-post", async (req, res) => {
     }
 })
 
+
+
+
+private_entries_deletes.delete("/delete-folders", async (req, res) =>{
+    if (!req.logged) {
+        res.send({logout: true})
+    } else {
+        ({username, password} = getTokenData(req))
+
+        let paths_of_folders_to_delete = Object.values(req.query)
+
+        let all_user_posts = await PrivatePostsModel.find({username})
+
+        let my_objs = (all_user_posts.filter(p => p.path.some(path=>paths_of_folders_to_delete.includes(path))))
+    
+        let my_obj_ids= my_objs.map(obj=>obj._id)
+
+        let delete_obj = await PrivatePostsModel.deleteMany({
+            _id:{$in:my_obj_ids }
+        })
+        
+
+        res.send(delete_obj)
+
+        
+    }
+})
+
 module.exports = private_entries_deletes

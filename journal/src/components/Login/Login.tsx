@@ -7,6 +7,7 @@ import useHttp from "../Hooks/useHttpRequest"
 import { RequestInfo } from "../Hooks/useHttpRequest"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router"
+import Actions from "../Actions/Actions"
 const Login:React.FC =()=>{
 
     const [showInfo, setShowInfo] = useState(false)
@@ -88,6 +89,7 @@ const Login:React.FC =()=>{
                     
                     localStorage.setItem("enc",login_oject.username)
                     dispatch({type:"LOGIN"})
+                    dispatch(Actions.fetch_post_tree() as any)
                     navigate("/entries",{replace:true})
 
                 }
@@ -120,7 +122,7 @@ const Login:React.FC =()=>{
                   <input className={` rounded-sm  w-3/4  text-black shadow-sm shadow-black p-1 ${(passwordInvalid)?"bg-red-200":""}` } onChange={passwordOnChangeHandler} onBlur={passwordOnBlurHandler} onFocus={passwordOnFocusHandler} type="password"></input>
               </div>
           </div>
-          <div className={`flex w-96  ${!(usernameInvalid || passwordInvalid )?"justify-center":""}`}>
+          <div className={`flex w-96  ${!(usernameInvalid || passwordInvalid )?"":""}`}>
               <button className="bg-porange text-white text-center rounded-sm shadow-sm shadow-black px-6 py-2 mt-2 hover:bg-pgray h-fit" onClick={LoginUser}>
                   Login
               </button>

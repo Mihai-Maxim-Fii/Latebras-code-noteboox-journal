@@ -3,7 +3,7 @@ const sha256 = require("crypto-js/sha256")
 const express = require("express");
 const jwt = require("jsonwebtoken")
 const user_posts = express.Router()
-let user_refresh_tokens = require("../../models/refresh_tokens")
+let refresh_tkns = require("../../models/refresh_tokens")
 const {UserModel, PublicUserModel} = require("../../models/user-schemas")
 const {UserPostTreeModel} = require("../../models/user-post-tree-schema")
 const register_schema = Joi.object({username: Joi.string().min(6).max(20), public_username: Joi.string().min(6).max(20), password: Joi.string().min(10).max(25)})
@@ -112,7 +112,7 @@ user_posts.post("/login", async (req, res) => {
       
         const refresh_token = jwt.sign(hashed_user, process.env.JWT_REFRESH_TOKEN, {expiresIn: '24h'})
         const access_token = jwt.sign(hashed_user, process.env.JWT_TOKEN, {expiresIn: '10s'})
-        user_refresh_tokens.push(refresh_token)
+        refresh_tkns.add_refresh_token(refresh_token)
 
         res.cookie("access_token",access_token,{httpOnly:true, maxAge: 3600000})
         res.cookie("refresh_token",refresh_token,{httpOnly:true, maxAge: 3600000})

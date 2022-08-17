@@ -27,10 +27,12 @@ function useHttp():RequestHttpHook{
     const dispatch = useDispatch()
 
     const handle_data = (data:any, resolve:any)=>{
-        /*
+        
         if(data.logout!==undefined){
         if(!data.logout){
-        resolve(data)}
+
+        resolve(data)
+        }
         else{
         dispatch({type:"LOGOUT"})
         }
@@ -38,8 +40,8 @@ function useHttp():RequestHttpHook{
        else{
            resolve(data)
        }
-       */
-      resolve(data)
+       
+     // resolve(data)
     }
 
     const send_request = async (request:RequestInfo, resolve:(data:any)=>{})=>{

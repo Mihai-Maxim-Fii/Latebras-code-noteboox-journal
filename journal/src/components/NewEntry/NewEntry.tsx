@@ -207,26 +207,75 @@ const NewEntry:React.FC<EntryProps> = (props) =>{
     const handleNewFile = (event:any) =>{
         setSelectedImages((old: any)=>[...old, event.target.files[0]])
     }
-    return(
 
+    useEffect( ()=>{
+        window.addEventListener("resize",()=>{
+            setInnerW(window.innerWidth)
+        })
+    },[])
+
+    const [innerW, setInnerW] = useState(window.innerWidth)
+    return(
+        <div style={{
+            display:"grid",
+            width:"100vw",
+            height:"100vh",
+            overflowX:"hidden",
+            gridTemplateColumns:innerW>=768?"1fr 5fr 1fr":"1fr 12fr 1fr",
+        }}>
+
+        <div className=' bg-ppink ' style={{
+            width:"100%"
+        }}>
+           
+        <motion.div
+
+
+            initial={{
+                width:"0%"
+                
+            }}
+
+            animate={{
+                width:"100%"
+            }}
+
+            transition={{
+                duration:0.5
+            }}
+
+
+
+
+
+        
+        
+        className='w-full bg-ppink md:bg-pgray h-full'>
+
+        </motion.div>
+        </div>
+        <div className=' w-full h-full flex justify-center items-center'>
         <motion.div 
 
-        initial={{
-            marginTop:-1000,
-            
-        }}
 
-        animate={{
-            marginTop:0
-        }}
 
-        transition={{
-            duration:0.25
-        }}
+            initial={{
+                marginTop:-5000
+                
+            }}
+
+            animate={{
+                marginTop:0
+            }}
+
+            transition={{
+                duration:0.35
+            }}
+
         
         
         
-        className=" w-11/12 md:w-11/12     justify-self-start  ">
+        className=" w-11/12   ">
         
             <div className=" bg-porange h-12 flex justify-between items-center p-2  ">
                 <div>
@@ -358,6 +407,33 @@ const NewEntry:React.FC<EntryProps> = (props) =>{
             </div>
             
             </motion.div>
+            </div>
+            <div className='w-full w-0 md:w-full bg-pgray'>
+            <motion.div 
+
+
+                initial={{
+                    width:"100%"
+                    
+                }}
+
+                animate={{
+                    width:"0%"
+                }}
+
+                transition={{
+                    duration:0.5
+                }}
+
+        
+            
+            
+            
+            className=' bg-ppink w-full h-full'>
+
+            </motion.div>
+            </div>
+            </div>
 
     )
 }

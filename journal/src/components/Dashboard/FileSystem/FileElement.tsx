@@ -13,15 +13,21 @@ interface FileElementProps{
     displayAdd:any,
     removeFolder:any,
     closeFolder:any,
-    index:number
+    index:number,
+    trigger_delete:any
 }
 
 const FileElement:React.FC<FileElementProps> = (props) =>{
     const [showOptions, setShowOptions] = useState(false)
     const [showModal, setShowModel] = useState(false)
     const dispatch = useDispatch()
+    const [show_delete_dialog, set_show_delete_dialog] = useState(false)
+
+    const [show_delete_status, set_show_delete_status] = useState(false)
+
     return (
        <div className=" h-full relative flex flex-col justify-center  w-full">
+           
           <div className="flex cursor-pointer text-white justify-between bg-porange p-2 w-full" onClick={()=>{
               props.setDisplayOptions((old:any)=>{
                   let new_options = old.map((elem:any)=>"false")
@@ -32,8 +38,6 @@ const FileElement:React.FC<FileElementProps> = (props) =>{
                         new_options[props.index]="true"
                     }
                   }
-
-
                   return new_options
               })
           }}>
@@ -88,29 +92,30 @@ const FileElement:React.FC<FileElementProps> = (props) =>{
                  
               }
              
-              <div className="flex   justify-center  text-white  rounded-b-lg  "> 
-               <motion.button onClick={()=>{props.displayAdd(props.currentPath)}}  className=" p-1 w-1/2 text-md bg-porange hover:bg-pgray hover:text-white "
-               
-             >
+              <div className="flex justify-center  text-white  rounded-b-lg  "> 
+               <motion.button onClick={()=>{props.displayAdd(props.currentPath)}}  className={` p-1 ${props.currentPath!=="L0#root"?" w-1/2":"w-full"}  text-md bg-porange hover:bg-pgray hover:text-white `}>
                   
                   Add
 
                  </motion.button>
-                 <motion.button onClick={()=>{props.closeFolder(props.currentPath)}}  className=" p-1 w-1/2 text-md bg-porange hover:bg-pgray hover:text-white "
-               
-             >
+                
+                 {props.currentPath!=="L0#root"&&
+                 <motion.button onClick={()=>{props.closeFolder(props.currentPath)}}  className=" p-1 w-1/2 text-md bg-porange hover:bg-pgray hover:text-white ">
                   
                   Close
                  </motion.button>
+                 }
 
-
-                 <motion.button onClick={()=>props.removeFolder(props.currentPath)}  className=" p-1 w-1/2 text-md bg-porange hover:bg-pgray hover:text-white"
-               
-                >
+                {props.currentPath!=="L0#root"&&
+                 <motion.button onClick={
+                     ()=>{
+                     props.trigger_delete(props.currentPath)
+                     }}  className=" p-1 w-1/2 text-md bg-porange hover:bg-pgray hover:text-white">
                   
                   Delete
                 
                  </motion.button>
+                }
                  </div>
                 
           </motion.div>
